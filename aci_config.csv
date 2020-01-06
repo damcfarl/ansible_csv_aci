@@ -1,0 +1,4 @@
+tenant,app,epg,bridgedomain,gateway,mask,mac,status,vrf
+dm_loop,MyApp,web,BD-web,192.168.10.254,24,00:22:BD:F8:19:FF,created,Prod
+dm_loop,MyApp,db,BD-db,192.168.11.254,24,00:22:BD:F8:19:FF,created,Prod
+dm_loop,MyApp,app,BD-app,192.168.12.254,24,00:22:BD:F8:19:FF,created,Prod

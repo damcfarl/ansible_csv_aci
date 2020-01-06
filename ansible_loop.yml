@@ -1,0 +1,138 @@
+---
+- name: Make Tenant Ansible_Loop
+  hosts: apic1
+  connection: local
+#  gather_facts:  false
+#  user: damcfarl
+
+
+
+  vars_files:
+    - external_vars.yml
+
+  tasks:
+    - name: "Reading Tenant information"
+      read_csv:
+        path: aci_config.csv
+      register: aci_config
+    - name:  Creating Tenant
+      aci_tenant:
+        tenant:  "{{ aci_config.tenant }}"
+        description: "Ansible Loop CSV Tenant"
+        host:  "{{ host }}"
+        username: "{{ user }}"
+        password: "{{ aci_password }}"
+        validate_certs: "{{ aci_validate_certs  }}"
+        state: present
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: aci_config
+
+
+    - name: "Reading VRF information"
+      read_csv:
+        path: aci_config.csv
+      register: aci_config
+    - name: "Creating VRF"
+      aci_vrf:
+        tenant: "{{ aci_config.tenant }}"
+        vrf_name: "{{ aci_config.vrf }}"
+        host: "{{ host }}"
+        username: "{{ user }}"
+        password: "{{ aci_password }}"
+#       private_key:  "{{ private_key }}"
+#       certificate_name: "{{ certificate_name }}"
+        validate_certs: "{{ aci_validate_certs  }}"
+        state: present
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: aci_config
+
+
+    - name: "Reading BD VRF information"
+      read_csv:
+        path: aci_config.csv
+      register: aci_config
+    - name: Create a Bridge Domain
+      aci_bd:
+        host: "{{host}}"
+        username: "{{user}}"
+        password: "{{ aci_password }}"
+        #       private_key:  "{{ private_key }}"
+        #       certificate_name: "{{ certificate_name }}"
+        validate_certs: "{{ aci_validate_certs  }}"
+        tenant: "{{ aci_config.tenant }}"
+        vrf_name: "{{aci_config.vrf}}"
+        bd: "{{aci_config.bridgedomain}}"
+        state: present
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: aci_config
+
+
+    - name: "Adding BD Gateway Mask information"
+      read_csv:
+        path: aci_config.csv
+      register: aci_config
+    - name: create a subnet
+      aci_bd_subnet:
+        host: "{{host}}"
+        username: "{{user}}"
+        password: "{{ aci_password }}"
+        #       private_key:  "{{ private_key }}"
+        #       certificate_name: "{{ certificate_name }}"
+        validate_certs: "{{ aci_validate_certs  }}"
+        tenant: "{{ aci_config.tenant }}"
+        bd: "{{ aci_config.bridgedomain }}"
+        gateway: "{{ aci_config.gateway }}"
+        mask: "{{ aci_config.mask }}"
+        state: present
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: aci_config
+
+    - name: "Adding APP information"
+      read_csv:
+        path: aci_config.csv
+      register: aci_config
+    - name: Add a new AP
+      aci_ap:
+        host: "{{host}}"
+        username: "{{user}}"
+        password: "{{aci_password}}"
+        validate_certs: "{{ aci_validate_certs }}"
+        tenant: "{{ aci_config.tenant }}"
+        ap: "{{ aci_config.app }}"
+        description: default ap
+        state: present
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: aci_config
+
+
+    - name: "Adding EPG information"
+      read_csv:
+        path: aci_config.csv
+      register: aci_config
+    - name: Create EPGs
+      aci_epg:
+        host: "{{host}}"
+        username: "{{user}}"
+        password: "{{aci_password}}"
+        validate_certs: "{{ aci_validate_certs }}"
+        tenant: "{{ aci_config.tenant }}"
+        ap: "{{ aci_config.app }}"
+        epg: "{{aci_config.epg}}"
+        bd: "{{aci_config.bridgedomain}}"
+        state: present
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: aci_config
+
+
+# Modified by damcfarl
+#
+# Usage:  ansible-playbook ansible_loop.yml -i Inventory-file  -vvv
+#
+#  docs.ansible.com is essential to make sure you got the modules right
+# variables are defined in external_vars.yml

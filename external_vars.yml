@@ -1,0 +1,12 @@
+---
+#action: post
+user:  <<username>>
+protocol: https
+validate_certs:  no
+host:  <<apic_IP>>
+aci_password: <<password>>
+aci_validate_certs: false
+
+
+
+# These are the Variables and values that are used by ansible_loop.yml

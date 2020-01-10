@@ -6,3 +6,5 @@ These scripts are meant for educational/proof of concept purposes only. Any use 
 Update external_vars.yml for your credentials and APIC IP
 
 Modify the aci_config.csv file for your tenant/vrf/BD/gateway/mask
+
+This is a sample that reads a csv file to create some ACI tenant configurations

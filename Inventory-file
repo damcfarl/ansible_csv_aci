@@ -1,5 +1,5 @@
 [apic]
-10.122.143.36 username=damcfarl password=cisco!123
+<APIC IP_Address> username=<username> password=<password>
 
 [vcenter]
 vcenter1

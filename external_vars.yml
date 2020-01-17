@@ -1,10 +1,10 @@
 ---
 #action: post
-user:  <<username>>
+user:  damcfarl
 protocol: https
 validate_certs:  no
-host:  <<apic_IP>>
-aci_password: <<password>>
+host:  10.122.143.36
+aci_password: cisco!123
 aci_validate_certs: false
 
 
